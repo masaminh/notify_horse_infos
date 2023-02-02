@@ -1,0 +1,7 @@
+coverage/
+node_modules/
+data/
+cdk.out/
+cdk.context.json
+debug.ts
+.vscode/launch.json
