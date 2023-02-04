@@ -72,6 +72,24 @@ function getRange(start: number, end: number): number[] {
   return [...Array(end - start)].map((_, i) => (i + start));
 }
 
+function getEntries(raceDetails: RaceDetailApiResponseType[], horseIdSet: Set<string>) {
+  return raceDetails.flatMap((r) => {
+    const horseNames = r.horses.flatMap((h) => (horseIdSet.has(h.horseid) ? [h.horsename] : []));
+
+    if (horseNames.length === 0) {
+      return [];
+    }
+
+    return {
+      date: r.raceinfo.date,
+      courseName: r.raceinfo.coursename,
+      raceNumber: r.raceinfo.racenumber,
+      raceName: r.raceinfo.racename,
+      horseNames,
+    };
+  });
+}
+
 export async function entryPoint(event: unknown): Promise<ResultType> {
   try {
     if (!isEventType(event)) {
@@ -122,21 +140,7 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
       return [];
     });
 
-    const entries = raceDetails.flatMap((r) => {
-      const horseNames = r.horses.flatMap((h) => (horseIdSet.has(h.horseid) ? [h.horsename] : []));
-
-      if (horseNames.length === 0) {
-        return [];
-      }
-
-      return {
-        date: r.raceinfo.date,
-        courseName: r.raceinfo.coursename,
-        raceNumber: r.raceinfo.racenumber,
-        raceName: r.raceinfo.racename,
-        horseNames,
-      };
-    });
+    const entries = getEntries(raceDetails, horseIdSet);
 
     if (entries.length === 0) {
       return { message: null };
