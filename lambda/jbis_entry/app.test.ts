@@ -61,7 +61,7 @@ describe('lambda/jbis_entry/app', () => {
 
     app.setLogger(logger);
     const result = await app.entryPoint(event);
-    expect(result).toEqual({ message: '出走予定\n 2023-01-05 中山1R サラ系３歳　未勝利\n  馬名1' });
+    expect(result).toEqual({ message: '出走予定\n 2023-01-05 中山1R サラ系3歳 未勝利\n  馬名1' });
     expect(logger.error).not.toBeCalled();
   });
 

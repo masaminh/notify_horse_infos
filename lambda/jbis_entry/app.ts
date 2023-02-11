@@ -90,6 +90,12 @@ function getEntries(raceDetails: RaceDetailApiResponseType[], horseIdSet: Set<st
   });
 }
 
+function toHalfWidth(str: string): string {
+  return str
+    .replace(/[！-～]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+    .replaceAll('　', ' ');
+}
+
 export async function entryPoint(event: unknown): Promise<ResultType> {
   try {
     if (!isEventType(event)) {
@@ -150,7 +156,7 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
       const horseNamesStr = x.horseNames.map((n) => (`  ${n}`));
       return ` ${x.date} ${x.courseName}${x.raceNumber}R ${x.raceName}\n${horseNamesStr.join('\n')}`;
     });
-    const message = `出走予定\n${raceEntryStrings.join('\n')}`;
+    const message = toHalfWidth(`出走予定\n${raceEntryStrings.join('\n')}`);
 
     return {
       message,
