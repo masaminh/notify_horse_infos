@@ -1,4 +1,6 @@
-import { Stack, StackProps, Duration } from 'aws-cdk-lib';
+import {
+  Stack, StackProps, Duration, RemovalPolicy,
+} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
@@ -39,19 +41,27 @@ export class NotifyHorseInfosStack extends Stack {
       resultPath: '$.taskResult',
     });
 
+    const logGroup = new logs.LogGroup(this, 'LogGroup', {
+      logGroupName: `${props.context.stackName}/JbisEntryFunction`,
+      retention: logs.RetentionDays.ONE_MONTH,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    const lambdaFunction = new lambdaNodeJs.NodejsFunction(this, 'JbisEntryFunction', {
+      entry: 'lambda/jbis_entry/handler.ts',
+      architecture: lambda.Architecture.ARM_64,
+      runtime: lambda.Runtime.NODEJS_18_X,
+      logGroup,
+      tracing: lambda.Tracing.ACTIVE,
+      bundling: {
+        sourceMap: true,
+        forceDockerBundling: false,
+      },
+      timeout: Duration.minutes(1),
+    });
+
     const taskJbisEntry = new sfnTasks.LambdaInvoke(this, 'JbisEntry', {
-      lambdaFunction: new lambdaNodeJs.NodejsFunction(this, 'JbisEntryFunction', {
-        entry: 'lambda/jbis_entry/handler.ts',
-        architecture: lambda.Architecture.ARM_64,
-        runtime: lambda.Runtime.NODEJS_18_X,
-        logRetention: logs.RetentionDays.ONE_MONTH,
-        tracing: lambda.Tracing.ACTIVE,
-        bundling: {
-          sourceMap: true,
-          forceDockerBundling: false,
-        },
-        timeout: Duration.minutes(1),
-      }),
+      lambdaFunction,
       payload: sfn.TaskInput.fromObject({
         time: sfn.JsonPath.stringAt('$.time'),
         keibaApiUrl: props.context.keibaApiUrl,
@@ -72,12 +82,15 @@ export class NotifyHorseInfosStack extends Stack {
     const taskEnd = new sfn.Pass(this, 'End');
 
     const stateMachine = new sfn.StateMachine(this, `${id}StateMachine`, {
-      definition: taskGetHorses
-        .next(taskJbisEntry).next(
-          new sfn.Choice(this, 'Message is not null')
-            .when(sfn.Condition.isNotNull('$.taskResult.message'), taskSendMessage)
-            .otherwise(taskEnd),
-        ),
+      definitionBody: sfn.DefinitionBody.fromChainable(
+        taskGetHorses
+          .next(taskJbisEntry)
+          .next(
+            new sfn.Choice(this, 'Message is not null')
+              .when(sfn.Condition.isNotNull('$.taskResult.message'), taskSendMessage)
+              .otherwise(taskEnd),
+          ),
+      ),
       tracingEnabled: true,
     });
 
