@@ -6,9 +6,9 @@ const ContextValidator = t.type({
   stackName: t.string,
   horsesJsonBucket: t.string,
   horsesJsonKey: t.string,
-  keibaApiUrl: t.string,
   webhookName: t.string,
   queueArn: t.string,
+  jvApiUrlParameter: t.string,
 });
 
 export type ContextType = t.TypeOf<typeof ContextValidator>;

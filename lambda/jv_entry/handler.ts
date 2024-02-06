@@ -5,7 +5,7 @@ import * as app from './app';
 
 const logger = new Logger({
   logLevel: 'INFO',
-  serviceName: 'notify_school_rss_fetcher',
+  serviceName: 'notify_horse_infos',
 });
 
 app.setLogger(logger);
