@@ -16,23 +16,15 @@ export function setLogger(logger_: Logger): void {
   logger = logger_;
 }
 
-const RaceInfoValidator = t.type({
-  id: t.string,
+const RaceidsApiResponseValidator = t.type({
   date: t.string,
-  courseid: t.string,
-  coursename: t.string,
-  racenumber: t.number,
-  racename: t.string,
+  raceids: t.array(t.string),
 });
 
-const RacesApiResponseValidator = t.array(
-  RaceInfoValidator,
-);
+type RaceidsApiResponseType = t.TypeOf<typeof RaceidsApiResponseValidator>;
 
-type RacesApiResponseType = t.TypeOf<typeof RacesApiResponseValidator>;
-
-function isRacesApiResponseType(arg: unknown): arg is RacesApiResponseType {
-  const v = RacesApiResponseValidator.decode(arg);
+function isRaceidsApiResponseType(arg: unknown): arg is RaceidsApiResponseType {
+  const v = RaceidsApiResponseValidator.decode(arg);
 
   if (e.isLeft(v)) {
     throw new Error(`RacesApiResponse: bad type: ${JSON.stringify(reporter.report(v))}`);
@@ -41,28 +33,28 @@ function isRacesApiResponseType(arg: unknown): arg is RacesApiResponseType {
   return true;
 }
 
-const RaceDetailApiResponseValidator = t.type({
-  raceinfo: RaceInfoValidator,
+const RacesApiResponseValidator = t.type({
+  date: t.string,
+  place: t.string,
+  raceNumber: t.number,
+  raceName: t.string,
   horses: t.array(t.type({
-    bracketnumber: t.union([t.number, t.undefined]),
-    horsenumber: t.union([t.number, t.undefined]),
-    horseid: t.string,
-    horsename: t.string,
+    horseName: t.string,
   })),
 });
 
-type RaceDetailApiResponseType = t.TypeOf<typeof RaceDetailApiResponseValidator>;
+type RacesApiResponseType = t.TypeOf<typeof RacesApiResponseValidator>;
 
-function isRaceDetailApiResponseType(
+function isRacesApiResponseType(
   arg: unknown,
   errorDetail: object,
-): arg is RaceDetailApiResponseType {
-  const v = RaceDetailApiResponseValidator.decode(arg);
+): arg is RacesApiResponseType {
+  const v = RacesApiResponseValidator.decode(arg);
 
   if (e.isLeft(v)) {
     const report = JSON.stringify(reporter.report(v));
     const detail = JSON.stringify(errorDetail);
-    throw new Error(`RaceDetailApiResponse: bad type: ${report}, ${detail}`);
+    throw new Error(`RacesApiResponse: bad type: ${report}, ${detail}`);
   }
 
   return true;
@@ -72,19 +64,21 @@ function getRange(start: number, end: number): number[] {
   return [...Array(end - start)].map((_, i) => (i + start));
 }
 
-function getEntries(raceDetails: RaceDetailApiResponseType[], horseIdSet: Set<string>) {
+function getEntries(raceDetails: RacesApiResponseType[], horseNameSet: Set<string>) {
   return raceDetails.flatMap((r) => {
-    const horseNames = r.horses.flatMap((h) => (horseIdSet.has(h.horseid) ? [h.horsename] : []));
+    const horseNames = r.horses.flatMap(
+      (h) => (horseNameSet.has(h.horseName) ? [h.horseName] : []),
+    );
 
     if (horseNames.length === 0) {
       return [];
     }
 
     return {
-      date: r.raceinfo.date,
-      courseName: r.raceinfo.coursename,
-      raceNumber: r.raceinfo.racenumber,
-      raceName: r.raceinfo.racename,
+      date: r.date,
+      courseName: r.place,
+      raceNumber: r.raceNumber,
+      raceName: r.raceName,
       horseNames,
     };
   });
@@ -103,42 +97,42 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
       throw new Error();
     }
 
-    const horseIdSet = new Set(event.horses.flatMap((h) => {
-      if (h.jbis == null) {
+    const horseNameSet = new Set(event.horses.flatMap((h) => {
+      if (h.jv == null) {
         return [];
       }
-      return [h.jbis.horseId];
+      return [h.jv.horseName];
     }));
 
     const eventDateTime = Utilities.getDateTime(event.time).setZone('Asia/Tokyo');
-    const raceApiPromises = getRange(0, 7).map((i) => {
+    const raceidsApiPromises = getRange(0, 7).map((i) => {
       const dateString = eventDateTime.plus({ days: i }).toISODate();
-      const apiUrl = new URL('races', event.keibaApiUrl);
+      const apiUrl = new URL('raceids', event.jvApiUrl);
       return axios.get(apiUrl.toString(), { params: { date: dateString } });
     });
 
-    const racesResponses = await Promise.all(raceApiPromises);
+    const raceidsResponses = await Promise.all(raceidsApiPromises);
 
-    const raceIds = racesResponses.flatMap((r) => {
+    const raceIds = raceidsResponses.flatMap((r) => {
       const raceInfos = r.data;
-      if (isRacesApiResponseType(raceInfos)) {
-        return raceInfos.map((race) => (race.id));
+      if (isRaceidsApiResponseType(raceInfos)) {
+        return raceInfos.raceids;
       }
 
       /* istanbul ignore next */
       return [];
     });
 
-    const detailApiPromises = raceIds.map((raceid) => {
-      const apiUrl = new URL(`races/${raceid}/detail`, event.keibaApiUrl);
+    const racesApiPromises = raceIds.map((raceid) => {
+      const apiUrl = new URL(`races/${raceid}`, event.jvApiUrl);
       return axios.get(apiUrl.toString());
     });
 
-    const detailResponses = await Promise.all(detailApiPromises);
+    const racesResponses = await Promise.all(racesApiPromises);
 
-    const raceDetails = detailResponses.flatMap((r) => {
+    const raceDetails = racesResponses.flatMap((r) => {
       const raceDetail = r.data;
-      if (isRaceDetailApiResponseType(raceDetail, { url: r.config.url })) {
+      if (isRacesApiResponseType(raceDetail, { url: r.config.url })) {
         return [raceDetail];
       }
 
@@ -146,7 +140,7 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
       return [];
     });
 
-    const entries = getEntries(raceDetails, horseIdSet);
+    const entries = getEntries(raceDetails, horseNameSet);
 
     if (entries.length === 0) {
       return { message: null };
