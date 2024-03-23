@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 import middy from '@middy/core';
-import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger';
+import { Logger } from '@aws-lambda-powertools/logger';
+import { injectLambdaContext } from '@aws-lambda-powertools/logger/middleware';
 import * as app from './app';
 
 const logger = new Logger({
