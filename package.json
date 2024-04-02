@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.3",
+    "@aws-lambda-powertools/tracer": "^2.0.3",
     "@middy/core": "5.2.3",
     "aws-cdk-lib": "^2.133.0",
     "axios": "1.6.8",
