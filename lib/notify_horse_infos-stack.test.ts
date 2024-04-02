@@ -18,7 +18,7 @@ describe('NotifyHorseInfosStack', () => {
   it('LogGroup', () => {
     template.hasResource('AWS::Logs::LogGroup', {
       Properties: {
-        LogGroupName: `${context.context.stackName}/JvEntryFunction`,
+        LogGroupName: `${context.context.stackName}/EntryFunction`,
         RetentionInDays: 30,
       },
       DeletionPolicy: 'Delete',

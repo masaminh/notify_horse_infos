@@ -7,6 +7,8 @@ import { ResultType } from '../result_type';
 import * as Utilities from '../utilities';
 
 interface Logger {
+  info: (message: string) => void,
+  warn: (message: string) => void,
   error: (message: string) => void,
 }
 
@@ -98,40 +100,43 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
     }
 
     const horseNameSet = new Set(event.horses.flatMap((h) => {
-      if (h.jv == null) {
+      if (h.horseName == null) {
         return [];
       }
-      return [h.jv.horseName];
+      return [h.horseName];
     }));
 
+    const baseUrls = event.urlParameters.map((p) => p.Value);
     const eventDateTime = Utilities.getDateTime(event.time).setZone('Asia/Tokyo');
-    const raceidsApiPromises = getRange(0, 7).map((i) => {
-      const dateString = eventDateTime.plus({ days: i }).toISODate();
-      const apiUrl = new URL('raceids', event.jvApiUrl);
-      return axios.get(apiUrl.toString(), { params: { date: dateString } });
-    });
+    const raceidsApiPromises = getRange(0, 7).flatMap((i) => baseUrls.map(
+      async (baseUrl) => {
+        const dateString = eventDateTime.plus({ days: i }).toISODate();
+        const apiUrl = new URL('raceids', baseUrl);
+        const response = await axios.get(apiUrl.toString(), { params: { date: dateString } });
+        return { response, baseUrl };
+      },
+    ));
 
     const raceidsResponses = await Promise.all(raceidsApiPromises);
 
-    const raceIds = raceidsResponses.flatMap((r) => {
-      const raceInfos = r.data;
+    const raceApiUrls = raceidsResponses.flatMap((r) => {
+      const raceInfos = r.response.data;
+      logger?.info(`fetch: ${r.response.config.url} ${JSON.stringify(raceInfos)}`);
       if (isRaceidsApiResponseType(raceInfos)) {
-        return raceInfos.raceids;
+        return raceInfos.raceids.map((raceid) => new URL(`races/${raceid}`, r.baseUrl));
       }
 
       /* istanbul ignore next */
       return [];
     });
 
-    const racesApiPromises = raceIds.map((raceid) => {
-      const apiUrl = new URL(`races/${raceid}`, event.jvApiUrl);
-      return axios.get(apiUrl.toString());
-    });
+    const racesApiPromises = raceApiUrls.map((apiUrl) => axios.get(apiUrl.toString()));
 
     const racesResponses = await Promise.all(racesApiPromises);
 
     const raceDetails = racesResponses.flatMap((r) => {
       const raceDetail = r.data;
+      logger?.info(`fetch: ${r.config.url} ${JSON.stringify(raceDetail)}`);
       if (isRacesApiResponseType(raceDetail, { url: r.config.url })) {
         return [raceDetail];
       }

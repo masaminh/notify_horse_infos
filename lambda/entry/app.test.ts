@@ -37,9 +37,9 @@ axiosMock.get.mockImplementation((url, config) => {
   return Promise.resolve({ data, config: { url } });
 });
 
-const logger = { error: jest.fn() };
+const logger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
-describe('lambda/jv_entry/app', () => {
+describe('lambda/entry/app', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -47,8 +47,8 @@ describe('lambda/jv_entry/app', () => {
   it('entryPoint', async () => {
     const event = {
       time: '2023-01-04T21:00:00Z',
-      jvApiUrl: 'https://example.com',
-      horses: [{ jv: { horseName: '馬名1' } }],
+      urlParameters: [{ Value: 'https://example.com' }],
+      horses: [{ horseName: '馬名1' }],
     };
 
     app.setLogger(logger);
@@ -57,10 +57,10 @@ describe('lambda/jv_entry/app', () => {
     expect(logger.error).not.toHaveBeenCalled();
   });
 
-  it('entryPoint: event.horsesにjv用情報がない', async () => {
+  it('entryPoint: event.horsesに馬名がない', async () => {
     const event = {
       time: '2023-01-04T21:00:00Z',
-      jvApiUrl: 'https://example.com',
+      urlParameters: [{ Value: 'https://example.com' }],
       horses: [{}],
     };
 
@@ -79,8 +79,8 @@ describe('lambda/jv_entry/app', () => {
   it('entryPoint: bad event time', async () => {
     const event = {
       time: '2023-01-04T21:00:00Y',
-      jvApiUrl: 'https://example.com',
-      horses: [{ jv: { horseName: '馬名1' } }],
+      urlParameters: [{ Value: 'https://example.com' }],
+      horses: [{ horseName: '馬名1' }],
     };
     app.setLogger(logger);
     await expect(app.entryPoint(event)).rejects.toThrow();
@@ -90,8 +90,8 @@ describe('lambda/jv_entry/app', () => {
   it('entryPoint: bad races api response', async () => {
     const event = {
       time: '1980-01-01T00:00:00Z',
-      jvApiUrl: 'https://example.com',
-      horses: [{ jv: { horseName: '馬名1' } }],
+      urlParameters: [{ Value: 'https://example.com' }],
+      horses: [{ horseName: '馬名1' }],
     };
     app.setLogger(logger);
     await expect(app.entryPoint(event)).rejects.toThrow();
@@ -101,8 +101,8 @@ describe('lambda/jv_entry/app', () => {
   it('entryPoint: bad racedetail api response', async () => {
     const event = {
       time: '1981-01-01T00:00:00Z',
-      jvApiUrl: 'https://example.com',
-      horses: [{ jv: { horseName: '馬名1' } }],
+      urlParameters: [{ Value: 'https://example.com' }],
+      horses: [{ horseName: '馬名1' }],
     };
     app.setLogger(logger);
     await expect(app.entryPoint(event)).rejects.toThrow();

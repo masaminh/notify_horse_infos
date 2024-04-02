@@ -41,33 +41,27 @@ export class NotifyHorseInfosStack extends Stack {
       resultPath: '$.taskResult',
     });
 
-    const apiUrlParameter = ssm.StringParameter.fromStringParameterName(
-      this,
-      'ApiUrlParameter',
-      props.context.jvApiUrlParameter,
+    const apiUrlParameters = props.context.apiUrlParameters.map(
+      (p, i) => ssm.StringParameter.fromStringParameterName(this, `ApiUrlParameters${i}`, p),
     );
-    const taskGetApiUrl = new sfnTasks.CallAwsService(this, 'GetApiUrl', {
+    const taskGetApiUrls = new sfnTasks.CallAwsService(this, 'GetApiUrls', {
       service: 'ssm',
-      action: 'getParameter',
-      iamAction: 'ssm:GetParameter',
-      iamResources: [apiUrlParameter.parameterArn],
+      action: 'getParameters',
+      iamResources: apiUrlParameters.map((p) => p.parameterArn),
       parameters: {
-        Name: props.context.jvApiUrlParameter,
+        Names: props.context.apiUrlParameters,
       },
-      resultPath: '$.taskResult.jvApiUrl',
-      resultSelector: {
-        value: sfn.JsonPath.stringAt('$.Parameter.Value'),
-      },
+      resultPath: '$.taskResult.UrlParameters',
     });
 
     const logGroup = new logs.LogGroup(this, 'LogGroup', {
-      logGroupName: `${props.context.stackName}/JvEntryFunction`,
+      logGroupName: `${props.context.stackName}/EntryFunction`,
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const lambdaFunction = new lambdaNodeJs.NodejsFunction(this, 'JvEntryFunction', {
-      entry: 'lambda/jv_entry/handler.ts',
+    const lambdaFunction = new lambdaNodeJs.NodejsFunction(this, 'EntryFunction', {
+      entry: 'lambda/entry/handler.ts',
       architecture: lambda.Architecture.ARM_64,
       runtime: lambda.Runtime.NODEJS_20_X,
       logGroup,
@@ -79,11 +73,11 @@ export class NotifyHorseInfosStack extends Stack {
       timeout: Duration.minutes(1),
     });
 
-    const taskJvEntry = new sfnTasks.LambdaInvoke(this, 'JvEntry', {
+    const taskEntry = new sfnTasks.LambdaInvoke(this, 'Entry', {
       lambdaFunction,
       payload: sfn.TaskInput.fromObject({
         time: sfn.JsonPath.stringAt('$.time'),
-        jvApiUrl: sfn.JsonPath.stringAt('$.taskResult.jvApiUrl.value'),
+        urlParameters: sfn.JsonPath.stringAt('$.taskResult.UrlParameters.Parameters'),
         horses: sfn.JsonPath.stringAt('$.taskResult.horsesJson.horses'),
       }),
       payloadResponseOnly: true,
@@ -103,8 +97,8 @@ export class NotifyHorseInfosStack extends Stack {
     const stateMachine = new sfn.StateMachine(this, `${id}StateMachine`, {
       definitionBody: sfn.DefinitionBody.fromChainable(
         taskGetHorses
-          .next(taskGetApiUrl)
-          .next(taskJvEntry)
+          .next(taskGetApiUrls)
+          .next(taskEntry)
           .next(
             new sfn.Choice(this, 'Message is not null')
               .when(sfn.Condition.isNotNull('$.taskResult.message'), taskSendMessage)
