@@ -4,19 +4,18 @@ import reporter from 'io-ts-reporters';
 
 const EventValidator = t.type({
   time: t.string,
-  jvApiUrl: t.string,
+  urlParameters: t.array(
+    t.type({
+      Value: t.string,
+    }),
+  ),
   horses: t.array(
     t.type({
+      horseName: t.union([t.undefined, t.string]),
       jbis: t.union([
         t.undefined,
         t.type({
           horseId: t.string,
-        }),
-      ]),
-      jv: t.union([
-        t.undefined,
-        t.type({
-          horseName: t.string,
         }),
       ]),
     }),
