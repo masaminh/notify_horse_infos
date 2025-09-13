@@ -7,7 +7,9 @@
   },
   "scripts": {
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "pretest": "npm run synth > /dev/null"
   },
   "author": "masaminh",
   "license": "MIT",
