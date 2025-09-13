@@ -9,7 +9,7 @@
     "test": "jest",
     "cdk": "cdk",
     "synth": "cdk synth",
-    "pretest": "npm run synth > /dev/null"
+    "pretest": "npm run synth"
   },
   "author": "masaminh",
   "license": "MIT",

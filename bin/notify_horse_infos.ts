@@ -12,5 +12,7 @@ if (!isContextType(context)) {
   throw new Error('bad context');
 }
 
+console.log(context.apiUrlParameters);
+
 // eslint-disable-next-line no-new
 new NotifyHorseInfosStack(app, context.stackName, { context });
