@@ -267,15 +267,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for IAM role
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": {
-                  "Fn::FindInMap": [
-                    "ServiceprincipalMap",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    "states",
-                  ],
-                },
+                "Service": "states.amazonaws.com",
               },
             },
           ],
@@ -304,11 +296,6 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Lambda f
           "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
         },
         "S3Key": "HASH_PLACEHOLDER.zip",
-      },
-      "Environment": {
-        "Variables": {
-          "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-        },
       },
       "Handler": "index.handler",
       "LoggingConfig": {
@@ -391,115 +378,6 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Step Fun
 
 exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete stack 1`] = `
 {
-  "Mappings": {
-    "ServiceprincipalMap": {
-      "af-south-1": {
-        "states": "states.af-south-1.amazonaws.com",
-      },
-      "ap-east-1": {
-        "states": "states.ap-east-1.amazonaws.com",
-      },
-      "ap-northeast-1": {
-        "states": "states.ap-northeast-1.amazonaws.com",
-      },
-      "ap-northeast-2": {
-        "states": "states.ap-northeast-2.amazonaws.com",
-      },
-      "ap-northeast-3": {
-        "states": "states.ap-northeast-3.amazonaws.com",
-      },
-      "ap-south-1": {
-        "states": "states.ap-south-1.amazonaws.com",
-      },
-      "ap-south-2": {
-        "states": "states.ap-south-2.amazonaws.com",
-      },
-      "ap-southeast-1": {
-        "states": "states.ap-southeast-1.amazonaws.com",
-      },
-      "ap-southeast-2": {
-        "states": "states.ap-southeast-2.amazonaws.com",
-      },
-      "ap-southeast-3": {
-        "states": "states.ap-southeast-3.amazonaws.com",
-      },
-      "ap-southeast-4": {
-        "states": "states.ap-southeast-4.amazonaws.com",
-      },
-      "ca-central-1": {
-        "states": "states.ca-central-1.amazonaws.com",
-      },
-      "cn-north-1": {
-        "states": "states.cn-north-1.amazonaws.com",
-      },
-      "cn-northwest-1": {
-        "states": "states.cn-northwest-1.amazonaws.com",
-      },
-      "eu-central-1": {
-        "states": "states.eu-central-1.amazonaws.com",
-      },
-      "eu-central-2": {
-        "states": "states.eu-central-2.amazonaws.com",
-      },
-      "eu-north-1": {
-        "states": "states.eu-north-1.amazonaws.com",
-      },
-      "eu-south-1": {
-        "states": "states.eu-south-1.amazonaws.com",
-      },
-      "eu-south-2": {
-        "states": "states.eu-south-2.amazonaws.com",
-      },
-      "eu-west-1": {
-        "states": "states.eu-west-1.amazonaws.com",
-      },
-      "eu-west-2": {
-        "states": "states.eu-west-2.amazonaws.com",
-      },
-      "eu-west-3": {
-        "states": "states.eu-west-3.amazonaws.com",
-      },
-      "il-central-1": {
-        "states": "states.il-central-1.amazonaws.com",
-      },
-      "me-central-1": {
-        "states": "states.me-central-1.amazonaws.com",
-      },
-      "me-south-1": {
-        "states": "states.me-south-1.amazonaws.com",
-      },
-      "sa-east-1": {
-        "states": "states.sa-east-1.amazonaws.com",
-      },
-      "us-east-1": {
-        "states": "states.us-east-1.amazonaws.com",
-      },
-      "us-east-2": {
-        "states": "states.us-east-2.amazonaws.com",
-      },
-      "us-gov-east-1": {
-        "states": "states.us-gov-east-1.amazonaws.com",
-      },
-      "us-gov-west-1": {
-        "states": "states.us-gov-west-1.amazonaws.com",
-      },
-      "us-iso-east-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-iso-west-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-isob-east-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-west-1": {
-        "states": "states.us-west-1.amazonaws.com",
-      },
-      "us-west-2": {
-        "states": "states.us-west-2.amazonaws.com",
-      },
-    },
-  },
   "Parameters": {
     "ApiUrlParameters0Parameter": {
       "Default": "/test/api/url1",
@@ -530,11 +408,6 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
           "S3Key": "HASH_PLACEHOLDER.zip",
-        },
-        "Environment": {
-          "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-          },
         },
         "Handler": "index.handler",
         "LoggingConfig": {
@@ -740,15 +613,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": {
-                  "Fn::FindInMap": [
-                    "ServiceprincipalMap",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    "states",
-                  ],
-                },
+                "Service": "states.amazonaws.com",
               },
             },
           ],
