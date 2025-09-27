@@ -303,7 +303,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Lambda f
         "S3Bucket": {
           "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
         },
-        "S3Key": "2a045b50596534942d9720c704f26e951afec8c7d27e165a38ab2723cf10d2d1.zip",
+        "S3Key": "HASH_PLACEHOLDER.zip",
       },
       "Environment": {
         "Variables": {
@@ -529,7 +529,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2a045b50596534942d9720c704f26e951afec8c7d27e165a38ab2723cf10d2d1.zip",
+          "S3Key": "HASH_PLACEHOLDER.zip",
         },
         "Environment": {
           "Variables": {
