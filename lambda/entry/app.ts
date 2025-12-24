@@ -63,7 +63,7 @@ function isRacesApiResponseType(
 }
 
 function getRange(start: number, end: number): number[] {
-  return [...Array(end - start)].map((_, i) => (i + start));
+  return Array.from({ length: end - start }, (_, i) => (i + start));
 }
 
 function getEntries(raceDetails: RacesApiResponseType[], horseNameSet: Set<string>) {
@@ -88,7 +88,8 @@ function getEntries(raceDetails: RacesApiResponseType[], horseNameSet: Set<strin
 
 function toHalfWidth(str: string): string {
   return str
-    .replace(/[！-～]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+    // codePointAtはundefinedを返す可能性があるが、ここではundefinedが返されることはないため、as numberを使用している
+    .replaceAll(/[！-～]/g, (s) => String.fromCodePoint((s.codePointAt(0) as number) - 0xFEE0))
     .replaceAll('　', ' ');
 }
 
@@ -96,7 +97,7 @@ export async function entryPoint(event: unknown): Promise<ResultType> {
   try {
     if (!isEventType(event)) {
       /* istanbul ignore next */
-      throw new Error();
+      throw new Error('Invalid event type');
     }
 
     const horseNameSet = new Set(event.horses.flatMap((h) => {
