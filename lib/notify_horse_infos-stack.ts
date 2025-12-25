@@ -1,13 +1,13 @@
 import {
-  Stack, StackProps, Duration, RemovalPolicy,
+  Stack, StackProps, Duration, RemovalPolicy, TimeZone
 } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import * as events from 'aws-cdk-lib/aws-events'
-import * as eventsTargets from 'aws-cdk-lib/aws-events-targets'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as lambdaNodeJs from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as scheduler from 'aws-cdk-lib/aws-scheduler'
+import * as schedulerTargets from 'aws-cdk-lib/aws-scheduler-targets'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as sfnTasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as sqs from 'aws-cdk-lib/aws-sqs'
@@ -108,10 +108,9 @@ export class NotifyHorseInfosStack extends Stack {
     })
 
     // eslint-disable-next-line no-new
-    new events.Rule(this, 'Rule', {
-      schedule: events.Schedule.cron({ hour: '21', minute: '0' }),
-      targets: [new eventsTargets.SfnStateMachine(stateMachine)],
-      enabled: true,
+    new scheduler.Schedule(this, 'Schedule', {
+      schedule: scheduler.ScheduleExpression.cron({ hour: '6', minute: '0', timeZone: TimeZone.ASIA_TOKYO }),
+      target: new schedulerTargets.StepFunctionsStartExecution(stateMachine, {}),
     })
   }
 }
