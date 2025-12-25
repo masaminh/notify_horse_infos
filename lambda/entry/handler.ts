@@ -16,6 +16,7 @@ const logger = new Logger({
 const tracer = new Tracer({ serviceName })
 
 app.setLogger(logger)
-export const handler = middy(app.entryPoint)
+export const handler = middy()
   .use(injectLambdaContext(logger))
   .use(captureLambdaHandler(tracer))
+  .handler(app.entryPoint)
