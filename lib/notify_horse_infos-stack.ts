@@ -63,7 +63,7 @@ export class NotifyHorseInfosStack extends Stack {
     const lambdaFunction = new lambdaNodeJs.NodejsFunction(this, 'EntryFunction', {
       entry: 'lambda/entry/handler.ts',
       architecture: lambda.Architecture.ARM_64,
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       logGroup,
       tracing: lambda.Tracing.ACTIVE,
       bundling: {

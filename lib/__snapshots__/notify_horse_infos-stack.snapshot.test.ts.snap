@@ -309,7 +309,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Lambda f
           "Arn",
         ],
       },
-      "Runtime": "nodejs20.x",
+      "Runtime": "nodejs24.x",
       "Timeout": 60,
       "TracingConfig": {
         "Mode": "Active",
@@ -421,7 +421,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete
             "Arn",
           ],
         },
-        "Runtime": "nodejs20.x",
+        "Runtime": "nodejs24.x",
         "Timeout": 60,
         "TracingConfig": {
           "Mode": "Active",
