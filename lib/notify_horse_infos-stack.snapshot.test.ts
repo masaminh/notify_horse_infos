@@ -5,7 +5,7 @@ import { ContextType } from './context_type'
 
 // S3Keyのハッシュ値を正規化するためのヘルパー関数
 function normalizeS3Keys (template: any): any {
-  const normalized = JSON.parse(JSON.stringify(template))
+  const normalized = structuredClone(template)
 
   // S3Keyの値を正規化
   function normalizeObject (obj: any): any {
@@ -17,7 +17,7 @@ function normalizeS3Keys (template: any): any {
       Object.entries(obj).forEach(([key, value]) => {
         if (key === 'S3Key' && typeof value === 'string') {
           // S3Keyのハッシュ部分を固定値に置換
-          normalizedObj[key] = value.replace(/[a-f0-9]{64}/g, 'HASH_PLACEHOLDER')
+          normalizedObj[key] = value.replaceAll(/[a-f0-9]{64}/g, 'HASH_PLACEHOLDER')
         } else {
           normalizedObj[key] = normalizeObject(value)
         }
