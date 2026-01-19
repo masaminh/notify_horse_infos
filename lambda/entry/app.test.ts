@@ -10,6 +10,8 @@ axiosMock.get.mockImplementation((url, config) => {
   if (url === 'https://example.com/raceids') {
     if (config?.params.date === '2023-01-05') {
       data = { date: '2023-01-05', raceids: ['2023010510601'] }
+    } else if (config?.params.date === '2024-01-06') {
+      data = { date: '2023-01-06', raceids: ['2024010610601'] }
     } else if (config?.params.date === '1980-01-01') {
       data = { message: 'BadDate' }
     } else if (config?.params.date === '1981-01-01') {
@@ -21,6 +23,20 @@ axiosMock.get.mockImplementation((url, config) => {
     data = {
       raceId: '2023010510601',
       date: '2023-01-05',
+      place: '中山',
+      raceNumber: 1,
+      raceName: 'サラ系３歳　未勝利',
+      horses: [
+        {
+          horseNumber: 1, horseId: '0123456789', horseName: '馬名1',
+        },
+      ],
+    }
+  } else if (url === 'https://example.com/races/2024010610601') {
+    data = {
+      raceId: '2024010610601',
+      date: '2024-01-06',
+      time: '13:00',
       place: '中山',
       raceNumber: 1,
       raceName: 'サラ系３歳　未勝利',
@@ -44,7 +60,7 @@ describe('lambda/entry/app', () => {
     jest.clearAllMocks()
   })
 
-  it('entryPoint', async () => {
+  it('entryPoint: timeが指定されていない', async () => {
     const event = {
       time: '2023-01-04T21:00:00Z',
       urlParameters: [{ Value: 'https://example.com' }],
@@ -54,6 +70,19 @@ describe('lambda/entry/app', () => {
     app.setLogger(logger)
     const result = await app.entryPoint(event)
     expect(result).toEqual({ message: '出走予定\n 2023-01-05 中山1R サラ系3歳 未勝利\n  馬名1' })
+    expect(logger.error).not.toHaveBeenCalled()
+  })
+
+  it('entryPoint: timeが指定されている', async () => {
+    const event = {
+      time: '2024-01-05T21:00:00Z',
+      urlParameters: [{ Value: 'https://example.com' }],
+      horses: [{ horseName: '馬名1' }],
+    }
+
+    app.setLogger(logger)
+    const result = await app.entryPoint(event)
+    expect(result).toEqual({ message: '出走予定\n 2024-01-06 13:00 中山1R サラ系3歳 未勝利\n  馬名1' })
     expect(logger.error).not.toHaveBeenCalled()
   })
 
