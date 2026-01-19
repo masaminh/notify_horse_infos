@@ -35,7 +35,7 @@ function isRaceidsApiResponseType (arg: unknown): arg is RaceidsApiResponseType 
   return true
 }
 
-const RacesApiResponseValidator = t.type({
+const RacesApiResponseValidator = t.intersection([t.type({
   date: t.string,
   place: t.string,
   raceNumber: t.number,
@@ -43,7 +43,9 @@ const RacesApiResponseValidator = t.type({
   horses: t.array(t.type({
     horseName: t.string,
   })),
-})
+}), t.partial({
+  time: t.string,
+})])
 
 type RacesApiResponseType = t.TypeOf<typeof RacesApiResponseValidator>
 
@@ -78,6 +80,7 @@ function getEntries (raceDetails: RacesApiResponseType[], horseNameSet: Set<stri
 
     return {
       date: r.date,
+      time: r.time,
       courseName: r.place,
       raceNumber: r.raceNumber,
       raceName: r.raceName,
@@ -154,7 +157,8 @@ export async function entryPoint (event: unknown): Promise<ResultType> {
 
     const raceEntryStrings = entries.map((x) => {
       const horseNamesStr = x.horseNames.map((n) => (`  ${n}`))
-      return ` ${x.date} ${x.courseName}${x.raceNumber}R ${x.raceName}\n${horseNamesStr.join('\n')}`
+      const timeStr = x.time ? ` ${x.time}` : ''
+      return ` ${x.date}${timeStr} ${x.courseName}${x.raceNumber}R ${x.raceName}\n${horseNamesStr.join('\n')}`
     })
     const message = toHalfWidth(`出走予定\n${raceEntryStrings.join('\n')}`)
 
