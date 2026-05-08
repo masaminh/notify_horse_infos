@@ -37,7 +37,7 @@
     "@aws-lambda-powertools/tracer": "^2.30.0",
     "@middy/core": "^6.4.5",
     "aws-cdk-lib": "^2.248.0",
-    "axios": "1.15.0",
+    "axios": "1.15.2",
     "constructs": "^10.4.4",
     "fp-ts": "^2.16.4",
     "io-ts": "^2.2.21",
