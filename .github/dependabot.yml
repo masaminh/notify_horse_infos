@@ -12,8 +12,8 @@ updates:
     open-pull-requests-limit: 5
     cooldown:
       semver-major-days: 7
-      semver-minor-days: 0
-      semver-patch-days: 0
+      semver-minor-days: 1
+      semver-patch-days: 1
     groups:
       aws-cdk:
         patterns:
@@ -21,18 +21,50 @@ updates:
           - "aws-cdk-lib"
           - "constructs"
           - "@aws-cdk/*"
+        update-types:
+          - "minor"
+          - "patch"
       aws-lambda-powertools:
         patterns:
           - "@aws-lambda-powertools/*"
+        update-types:
+          - "minor"
+          - "patch"
       eslint:
         patterns:
           - "eslint"
           - "eslint-*"
           - "neostandard"
+        update-types:
+          - "minor"
+          - "patch"
       types:
         patterns:
           - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
       typescript:
         patterns:
           - "typescript"
           - "@tsconfig/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      semver-major-days: 7
+      semver-minor-days: 1
+      semver-patch-days: 1
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
