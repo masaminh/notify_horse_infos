@@ -14,3 +14,25 @@ updates:
       semver-major-days: 7
       semver-minor-days: 0
       semver-patch-days: 0
+    groups:
+      aws-cdk:
+        patterns:
+          - "aws-cdk"
+          - "aws-cdk-lib"
+          - "constructs"
+          - "@aws-cdk/*"
+      aws-lambda-powertools:
+        patterns:
+          - "@aws-lambda-powertools/*"
+      eslint:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "neostandard"
+      types:
+        patterns:
+          - "@types/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@tsconfig/*"
