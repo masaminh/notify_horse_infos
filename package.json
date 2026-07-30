@@ -17,10 +17,10 @@
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/node24": "^24.0.3",
-    "@types/aws-lambda": "^8.10.136",
+    "@types/aws-lambda": "^8.10.162",
     "@types/jest": "^29.5.12",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^24",
+    "@types/node": "^25",
     "aws-cdk": "^2.1133.0",
     "constructs": "^10.7.1",
     "esbuild": "^0.28.1",
