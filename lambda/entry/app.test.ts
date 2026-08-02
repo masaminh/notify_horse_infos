@@ -6,18 +6,19 @@ const axiosMock = axios as jest.Mocked<typeof axios>
 
 axiosMock.get.mockImplementation((url, config) => {
   let data: object | undefined
+  const params = config?.params as { date?: string } | undefined
 
   if (url === 'https://example.com/raceids') {
-    if (config?.params.date === '2023-01-05') {
+    if (params?.date === '2023-01-05') {
       data = { date: '2023-01-05', raceids: ['2023010510601'] }
-    } else if (config?.params.date === '2024-01-06') {
+    } else if (params?.date === '2024-01-06') {
       data = { date: '2023-01-06', raceids: ['2024010610601'] }
-    } else if (config?.params.date === '1980-01-01') {
+    } else if (params?.date === '1980-01-01') {
       data = { message: 'BadDate' }
-    } else if (config?.params.date === '1981-01-01') {
+    } else if (params?.date === '1981-01-01') {
       data = { date: '1981-01-01', raceids: ['1981010110601'] }
     } else {
-      data = { date: config?.params.date ?? '', raceids: [] }
+      data = { date: params?.date ?? '', raceids: [] }
     }
   } else if (url === 'https://example.com/races/2023010510601') {
     data = {
