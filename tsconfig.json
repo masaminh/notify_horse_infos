@@ -1,4 +1,7 @@
 {
     "extends": "@tsconfig/node24/tsconfig.json",
-    "exclude": ["./src/**/*.test.ts"]
+    "exclude": ["./src/**/*.test.ts"],
+    "compilerOptions": {
+        "isolatedModules": true
+    }
 }
