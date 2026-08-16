@@ -16,7 +16,7 @@
   "author": "masaminh",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node24": "^24.0.4",
+    "@tsconfig/node24": "^24.0.5",
     "@types/aws-lambda": "^8.10.162",
     "@types/jest": "^29.5.12",
     "@types/luxon": "^3.7.4",
