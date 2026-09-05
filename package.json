@@ -24,10 +24,10 @@
     "aws-cdk": "^2.1139.0",
     "constructs": "^10.8.1",
     "esbuild": "^0.28.2",
-    "eslint": "^9",
-    "eslint-config-flat-gitignore": "^2.1.0",
+    "eslint": "^10",
+    "eslint-config-flat-gitignore": "^2.4.0",
     "jest": "^30.4.2",
-    "neostandard": "^0.12.2",
+    "neostandard": "^0.13.0",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "typescript": "~6.0"
