@@ -382,14 +382,6 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Step Fun
 exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete stack 1`] = `
 {
   "Parameters": {
-    "ApiUrlParameters0Parameter": {
-      "Default": "/test/api/url1",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "ApiUrlParameters1Parameter": {
-      "Default": "/test/api/url2",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
     "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
       "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
