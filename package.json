@@ -7,6 +7,7 @@
   },
   "scripts": {
     "test": "vitest run",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p lambda",
     "test:snapshot": "vitest run --testNamePattern=snapshot",
     "test:update-snapshots": "vitest run --update",
     "cdk": "cdk",

@@ -22,6 +22,8 @@ jobs:
       - uses: asdf-vm/actions/install@v4
       - name: Install Dependencies
         run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
