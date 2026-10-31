@@ -1,6 +1,6 @@
 {
     "extends": "@tsconfig/node24/tsconfig.json",
-    "exclude": ["./src/**/*.test.ts"],
+    "exclude": ["node_modules", "cdk.out", "lambda"],
     "compilerOptions": {
         "isolatedModules": true
     }
