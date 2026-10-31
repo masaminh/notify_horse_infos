@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for CloudWatch Log Group 1`] = `
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for CloudWatch Log Group 1`] = `
 {
   "LogGroupF5B46931": {
     "DeletionPolicy": "Delete",
@@ -14,9 +14,9 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for CloudWat
 }
 `;
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for EventBridge rule 1`] = `{}`;
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for EventBridge rule 1`] = `{}`;
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for IAM roles and policies 1`] = `
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for IAM roles and policies 1`] = `
 {
   "policies": {
     "EntryFunctionServiceRoleDefaultPolicy4FDA2B0C": {
@@ -312,7 +312,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for IAM role
 }
 `;
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Lambda function configuration 1`] = `
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for Lambda function configuration 1`] = `
 {
   "EntryFunction0B25DB0A": {
     "DependsOn": [
@@ -352,7 +352,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Lambda f
 }
 `;
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Step Functions state machine 1`] = `
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for Step Functions state machine 1`] = `
 {
   "TestStackStateMachineFE483C5B": {
     "DeletionPolicy": "Delete",
@@ -408,7 +408,7 @@ exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for Step Fun
 }
 `;
 
-exports[`NotifyHorseInfosStack Snapshot Tests should match snapshot for complete stack 1`] = `
+exports[`NotifyHorseInfosStack Snapshot Tests > should match snapshot for complete stack 1`] = `
 {
   "Parameters": {
     "BootstrapVersion": {

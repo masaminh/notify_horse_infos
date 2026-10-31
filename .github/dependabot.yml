@@ -51,6 +51,10 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
 
   - package-ecosystem: "github-actions"
     directory: "/"

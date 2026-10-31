@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as app from './app'
 
-jest.mock('axios')
-const axiosMock = axios as jest.Mocked<typeof axios>
+vi.mock('axios')
+const axiosMock = vi.mocked(axios)
 
 axiosMock.get.mockImplementation((url, config) => {
   let data: object | undefined
@@ -54,11 +55,11 @@ axiosMock.get.mockImplementation((url, config) => {
   return Promise.resolve({ data, config: { url } })
 })
 
-const logger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() }
+const logger = { error: vi.fn(), warn: vi.fn(), info: vi.fn() }
 
 describe('lambda/entry/app', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('entryPoint: timeが指定されていない', async () => {
