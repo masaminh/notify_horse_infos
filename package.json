@@ -6,9 +6,9 @@
     "notify_horse_entries": "bin/notify_horse_infos.js"
   },
   "scripts": {
-    "test": "jest",
-    "test:snapshot": "jest --testNamePattern=snapshot",
-    "test:update-snapshots": "jest --updateSnapshot",
+    "test": "vitest run",
+    "test:snapshot": "vitest run --testNamePattern=snapshot",
+    "test:update-snapshots": "vitest run --update",
     "cdk": "cdk",
     "synth": "cdk synth",
     "pretest": "npm run synth > /dev/null"
@@ -18,19 +18,18 @@
   "devDependencies": {
     "@tsconfig/node24": "^24.0.5",
     "@types/aws-lambda": "^8.10.164",
-    "@types/jest": "^30.0.0",
     "@types/luxon": "^3.7.6",
     "@types/node": "^24",
+    "@vitest/coverage-v8": "^5.0.5",
     "aws-cdk": "^2.1146.1",
     "constructs": "^10.8.1",
     "esbuild": "^0.28.2",
     "eslint": "^10",
     "eslint-config-flat-gitignore": "^2.4.0",
-    "jest": "^30.5.2",
     "neostandard": "^0.14.1",
-    "ts-jest": "^29.4.15",
     "ts-node": "^10.9.2",
-    "typescript": "~6.0"
+    "typescript": "~6.0",
+    "vitest": "^5.0.5"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.36.0",

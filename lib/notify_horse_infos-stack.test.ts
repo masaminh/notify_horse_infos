@@ -1,3 +1,4 @@
+import { beforeAll, describe, it } from 'vitest'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as cdk from 'aws-cdk-lib'
 import { readFileSync } from 'node:fs'
